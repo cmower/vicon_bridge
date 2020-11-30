@@ -438,17 +438,30 @@ private:
     }
     else
     {
+
+      /*
+       * Note by Chris Mower, Nov 2020
+       *
+       * Below I've removed the vicon_latency duration. This is a *dirty hack*!
+       * The reason is because our Windows PC (publishing Vicon frames) is not
+       * synced with our Linux PC (receiving vicon frames). A better solution
+       * should be found, but for now this will have to do...
+       *
+       */
+
       freq_status_.tick();
-      ros::Duration vicon_latency(msvcbridge::GetLatencyTotal().Total);
+      // ros::Duration vicon_latency(msvcbridge::GetLatencyTotal().Total); // -- Chris Mower, Nov 2020
 
       if(publish_tf_ || broadcast_tf_)
       {
-        process_subjects(now_time - vicon_latency);
+        // process_subjects(now_time - vicon_latency); // -- Chris Mower, Nov 2020
+        process_subjects(now_time); // -- Chris Mower, Nov 2020
       }
 
       if(publish_markers_)
       {
-        process_markers(now_time - vicon_latency, lastFrameNumber);
+        // process_markers(now_time - vicon_latency, lastFrameNumber); // -- Chris Mower, Nov 2020
+        process_markers(now_time, lastFrameNumber); // -- Chris Mower, Nov 2020
       }
 
       lastTime = now_time;
